@@ -1,37 +1,42 @@
-## Welcome to GitHub Pages
+## glsl-intersection-functions
 
-You can use the [editor on GitHub](https://github.com/catchouli/glsl-intersection-functions/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
 ```
+i wish there was just a library of rly fast intersection functions for glsl
+```
+- me, 2019
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+### Sphere intersection
 
-### Jekyll Themes
+#### In and out
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/catchouli/glsl-intersection-functions/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+```
+bool intersectSphere(vec3 origin, vec3 direction, vec3 sphereCentre, float sphereRadius, out vec2 intersectionLength)
+{
+  float c = length(origin - sphereCentre) - sphereRadius*sphereRadius;
+  float dotVal = dot(direction, (origin - sphereCentre));
+  float sqrtVal = dotVal*dotVal - dot(origin - sphereCentre, origin - sphereCentre) + sphereRadius*sphereRadius;
+  if (sqrtVal <= 0.0) {
+    return false;
+  }
+  if (sqrtVal == 0.0) {
+    intersectionLength.x = -dotVal;
+    intersectionLength.y = -dotVal;
+    return true;
+  }
+  else {
+    float d1 = -(dotVal) + sqrt(sqrtVal);
+    float d2 = -(dotVal) - sqrt(sqrtVal);
+    if (d1 < 0.0 && d2 < 0.0) {
+      return false;
+    } else if (d1 < 0.0 || d2 < 0.0) {
+      intersectionLength.x = max(d1,d2);
+      intersectionLength.y = min(d1,d2);
+      return true;
+    } else {
+      intersectionLength.x = max(d1,d2);
+      intersectionLength.y = min(d1,d2);
+      return true;
+    }
+  }
+}
+```
