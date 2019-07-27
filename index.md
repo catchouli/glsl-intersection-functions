@@ -1,9 +1,6 @@
 ## glsl-intersection-functions
 
-```
-i wish there was just a library of rly fast intersection functions for glsl
-```
-- me, 2019
+i wish there was just a library of rly fast intersection functions for glsl - me, 2019
 
 ### Sphere intersection
 
